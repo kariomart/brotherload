@@ -10,6 +10,10 @@ public class Master : MonoBehaviour {
 	public List<Hull> hulls = new List<Hull>();
 
 	public float fuelRate;
+	public float orePackageValue;
+	public bool oreInSpace;
+	public int packageTimer;
+	public int packageTime;
 
 	// Use this for initialization
 
@@ -26,7 +30,27 @@ public class Master : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		if (packageTime <= packageTimer && oreInSpace) {
+			packageTime ++;
+		} 
 		
+		else if (packageTime > packageTimer && oreInSpace) {
+			oreInSpace = false;
+			Player.me.money += orePackageValue;
+			packageTime = 0;
+		}
+		
+	}
+
+	public void sendOresHome(float value, int totalOre) {
+
+		if (!oreInSpace) {
+			packageTime = 0;
+			oreInSpace = true;
+			orePackageValue = value;
+			packageTimer = Random.Range(30, 50) * totalOre;
+		}
 	}
 
 	void addHulls() {
@@ -44,8 +68,6 @@ public class Master : MonoBehaviour {
 		drills.Add(new Drill("drill3", new int[] {2, 2, 2}, 14));
 
 	}
-
-
 
 	void addOres() {
 

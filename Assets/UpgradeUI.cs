@@ -70,6 +70,33 @@ public class UpgradeUI : MonoBehaviour {
 
 			buyDrill();	
 		}
+
+		if (selectedUpgrade == "hull") {
+
+			buyHull();	
+		}
+	}
+
+	public void sendOres() {
+
+		if (!Master.me.oreInSpace) {
+			float totalOreValue = 0;
+			int totalOre = 0;
+			string oreNames = "";
+
+			if (Player.me.inventory.Count == 0) { return; }
+
+			foreach(int i in Player.me.inventory) {
+				totalOreValue += Master.me.ores[i].value;
+				totalOre ++;
+				oreNames += Master.me.getOreName(i) + "\n";
+			}
+			
+			Player.me.inventory.Clear();
+			upgradeInfo.SetText("ORES SENT HOME:\n" + oreNames + "\nTOTAL VALUE: " + totalOreValue);
+			Master.me.sendOresHome(totalOreValue, totalOre);
+		}
+
 	}
 
 	public void buyFuel() {

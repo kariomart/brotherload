@@ -210,13 +210,9 @@ public class Player : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D coll) {
 		
-		if (coll.gameObject.tag == "platform") {
-			onPlatform = true;
-			UIController.me.toggleUpgradeDisplay();
-			//offsetCamera();
-		}
 
 	}
+
 
 	void OnCollisionExit2D(Collision2D coll) {
 		colliding = false;
@@ -227,6 +223,16 @@ public class Player : MonoBehaviour {
 			onPlatform = false;
 			//resetCamera();
 		}
+	}
+
+	void OnTriggerEnter2D(Collider2D coll) {
+
+		if (coll.gameObject.tag == "platform") {
+			onPlatform = true;
+			UIController.me.toggleUpgradeDisplay();
+			//offsetCamera();
+		}
+
 	}
 
 	public void stopGoingThisWay(Vector2 a) {
