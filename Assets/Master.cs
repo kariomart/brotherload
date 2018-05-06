@@ -6,6 +6,10 @@ public class Master : MonoBehaviour {
 
 	public static Master me;
 	public Ore[] ores;
+	public List<Drill> drills = new List<Drill>();
+	public List<Hull> hulls = new List<Hull>();
+
+	public float fuelRate;
 
 	// Use this for initialization
 
@@ -16,11 +20,29 @@ public class Master : MonoBehaviour {
 	void Start () {
 
 		addOres();		
+		addDrills();
+		addHulls();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
+	}
+
+	void addHulls() {
+
+		hulls.Add(new Hull("hull1", new int[] {1, 1, 1}, 18));
+		hulls.Add(new Hull("hull2", new int[] {2, 2, 2}, 16));
+		hulls.Add(new Hull("hull3", new int[] {2, 2, 2}, 14));
+
+	}
+
+	void addDrills() {
+
+		drills.Add(new Drill("drill1", new int[] {1, 1, 1}, 18));
+		drills.Add(new Drill("drill2", new int[] {2, 2, 2}, 16));
+		drills.Add(new Drill("drill3", new int[] {2, 2, 2}, 14));
+
 	}
 
 
@@ -54,6 +76,12 @@ public class Master : MonoBehaviour {
 		int oreType = GroundGenerator.me.tiles[x, y];
 		Debug.Log(ores[oreType].name);
 		return oreType;
+
+	}
+
+	public string getOreName(int index) {
+
+		return ores[index].name;
 
 	}
 }

@@ -7,7 +7,6 @@ public class Player : MonoBehaviour {
 	public static Player me;
 
 	public float tuningScale = .001f;
-	public float fuelCapacity;
 
 	Rigidbody2D rb;
 	BoxCollider2D box;
@@ -36,16 +35,26 @@ public class Player : MonoBehaviour {
 	public Transform digDownPt;
 	public Transform digLeftPt;
 	public Transform digRightPt;
+	public int buttonHeldCounter;
 	public int digCounter;
-	public int digSpeed;
+	public float digSpeed;
+	public int digPadding;
 
 	//GAMEPLAY VARS
+
+	public float money;
 
 	public List<int> inventory = new List<int>();
 
 	public int inventorySize;
 	public float fueltankSize;
-	public float fuelLossRate;
+	public float fuelIdleRate;
+	public float fuelMovingRate;
+	public float fuel;
+
+	public float armor;
+	
+	public bool onPlatform;
 
 
 
@@ -54,6 +63,7 @@ public class Player : MonoBehaviour {
 		me = this;
 		rb = GetComponent<Rigidbody2D>();
 		box = GetComponent<BoxCollider2D>();
+		fuel = fueltankSize;
 		
 	}
 	
@@ -71,16 +81,33 @@ public class Player : MonoBehaviour {
 			up = false;
 		}
 
-		if (Input.GetKey(KeyCode.S) && colliding && !up) {
-			dig("down");
+		if (Input.GetKey(KeyCode.S) && colliding && grounded) {
+			buttonHeldCounter ++;
+
+			if (buttonHeldCounter > digPadding) {
+				dig("down");
+			}
 		}
 
-		if (Input.GetKey(KeyCode.D) && colliding && !up) {
-			dig("right");
+		else if (Input.GetKey(KeyCode.D) && colliding && grounded) {
+			buttonHeldCounter ++;
+
+			if (buttonHeldCounter > digPadding) {
+				dig("right");
+			}
 		}
 
-		if (Input.GetKey(KeyCode.A) && colliding && !up) {
-			dig("left");
+		else if (Input.GetKey(KeyCode.A) && colliding && grounded) {
+
+			buttonHeldCounter ++;
+			
+			if (buttonHeldCounter > digPadding) {
+				dig("left");
+			}
+		}
+
+		else {
+			buttonHeldCounter = 0;
 		}
 	
 	}
@@ -141,9 +168,10 @@ public class Player : MonoBehaviour {
 
 			Destroy(tileBeingDestroyed);
 			tileBeingDestroyed = null;
-		}
+		} 
 
 		rb.MovePosition((Vector2)transform.position + vel);
+		fuel -= fuelIdleRate;
 		//rb.velocity = vel;
 
 	}
@@ -163,7 +191,7 @@ public class Player : MonoBehaviour {
 			coll = Physics2D.OverlapPoint(digRightPt.position);
 		}
 
-		if (coll != null) {
+		if (coll != null && coll.gameObject.tag == "ground") {
 			digging = true;
 			tileBeingDestroyed = coll.gameObject;
 		}
@@ -171,15 +199,39 @@ public class Player : MonoBehaviour {
 
 
 	void OnCollisionStay2D(Collision2D coll) {
-//		Debug.Log(coll.gameObject.name);
+		//Debug.Log(coll.gameObject.name);
 		colliding = true;
+		if (!grounded) {
+			//stopGoingThisWay((coll.gameObject.transform.position - transform.position).normalized);
+		}
 		justJumped = false;
 		
 	}
+
+	void OnCollisionEnter2D(Collision2D coll) {
+		
+		if (coll.gameObject.tag == "platform") {
+			onPlatform = true;
+			UIController.me.toggleUpgradeDisplay();
+			//offsetCamera();
+		}
+
+	}
+
 	void OnCollisionExit2D(Collision2D coll) {
 		colliding = false;
 		justJumped = true;
+
+		if (coll.gameObject.tag == "platform") {
+			UIController.me.toggleUpgradeDisplay();
+			onPlatform = false;
+			//resetCamera();
+		}
 	}
+
+	public void stopGoingThisWay(Vector2 a) {
+        vel -= a.normalized * Vector2.Dot(vel, a.normalized);
+    }
 
 	void SetGrounded() {
 		Vector2 pt1 = transform.TransformPoint(box.offset + new Vector2(box.size.x / 2, -box.size.y / 2) + new Vector2(-.01f, groundedOffset));//(box.size / 2));
@@ -189,5 +241,19 @@ public class Player : MonoBehaviour {
 		grounded = Physics2D.OverlapArea(pt1, pt2, LayerMask.GetMask("Dirt"));
 		//Debug.Log(Physics2D.OverlapArea(pt1, pt2, LayerMask.GetMask("Dirt")));
 		Debug.DrawLine(pt1, pt2, Color.cyan);
+	}
+
+	void offsetCamera() {
+
+		Vector3 pos = Camera.main.transform.localPosition;
+		Camera.main.transform.position = new Vector3(pos.x - 1.5f, pos.y, pos.z);
+
+	}
+
+	void resetCamera() {
+
+		Vector3 pos = Camera.main.transform.localPosition;
+		Camera.main.transform.position = new Vector3(0, 0, pos.z);
+
 	}
 }

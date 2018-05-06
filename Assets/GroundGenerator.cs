@@ -29,6 +29,10 @@ public class GroundGenerator : MonoBehaviour {
 	public int caNeighbors;
 	public int caSteps;
 
+	public int[] trickleCounters;
+	public int trickleCounter;
+	public bool trickled;
+
 
 	// Use this for initialization
 	void Start () {
@@ -43,6 +47,8 @@ public class GroundGenerator : MonoBehaviour {
 		newTiles = new int[groundWidth, groundHeight];
 		tileObjects = new GameObject[groundWidth, groundHeight];
 
+		trickleCounters = new int[2];
+
 		generateMapData();
 		CA();
 		cleanupTiles();
@@ -52,13 +58,16 @@ public class GroundGenerator : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		// if (Input.GetKeyDown(KeyCode.Space)) {
-		// 	doCAStep();
-		// 	updateDisplay();
-		// }
-		
+
 	}
 
+	void FixedUpdate() {
+
+		 if (!trickled) {
+			//trickleTiles();
+		 }
+
+	}
 
 
 	void generateMapData() {
@@ -213,12 +222,31 @@ public class GroundGenerator : MonoBehaviour {
 			for (int y = 0; y < groundHeight; y++) {
 				if (!tileObjects[x, y].activeInHierarchy) {
 					Destroy(tileObjects[x,y]);
+				} else {
+				//tileObjects[x,y].transform.parent = this.transform;
 				}
 			}
 		}
-
-
 	}
+
+	void trickleTiles() {
+
+
+		for(int i = 0; i < groundWidth; i++) {
+			GameObject tile = tileObjects[i, trickleCounter];
+
+			if (tile) {
+				tile.transform.parent = this.transform;
+			}
+		}
+
+		if (trickleCounter == groundHeight - 1) {
+			trickled = true;
+		}
+
+		trickleCounter ++;
+	}
+		
 
 	void CA() {
 
