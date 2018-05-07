@@ -14,6 +14,7 @@ public class UIController : MonoBehaviour {
 	public TextMeshProUGUI depthUI;
 	public TextMeshProUGUI hullUI;
 	public TextMeshProUGUI fuelUI;
+	public TextMeshProUGUI packageTimeUI;
 
 
 
@@ -37,6 +38,13 @@ public class UIController : MonoBehaviour {
 		depthUI.SetText("DEPTH\n" + (int)(Player.me.transform.position.y - (GroundGenerator.me.groundHeight)));
 		hullUI.SetText("HULL\n" + Player.me.armor);
 		fuelUI.SetText("FUEL\n" + Mathf.Round((Player.me.fuel / Player.me.fueltankSize) * 100) + "%");
+
+		if (Master.me.oreInSpace) {
+			packageTimeUI.SetText(Mathf.Round(((float)Master.me.packageTime / (float)Master.me.packageTimer) * 100) + "%");
+		} else {
+			packageTimeUI.SetText("0%");
+		}
+
 
 	}
 

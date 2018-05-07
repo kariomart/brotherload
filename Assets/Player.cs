@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Player : MonoBehaviour {
 
@@ -44,7 +45,9 @@ public class Player : MonoBehaviour {
 
 	public float money;
 
-	public List<int> inventory = new List<int>();
+//	public List<int> inventory = new List<int>();
+	public int[] inventory;
+	public int numInvOres;
 
 	public int inventorySize;
 	public float fueltankSize;
@@ -64,11 +67,13 @@ public class Player : MonoBehaviour {
 		rb = GetComponent<Rigidbody2D>();
 		box = GetComponent<BoxCollider2D>();
 		fuel = fueltankSize;
-		
+		inventory = new int[9];
+
 	}
 	
 	void Update () {
 
+		numInvOres = inventory.Sum();
 		float horizontal = Input.GetAxis("Horizontal");
 		
 		left = horizontal < 0;
@@ -109,6 +114,8 @@ public class Player : MonoBehaviour {
 		else {
 			buttonHeldCounter = 0;
 		}
+
+		
 	
 	}
 
@@ -163,7 +170,8 @@ public class Player : MonoBehaviour {
 
 			int oreType = Master.me.posToOre(tileBeingDestroyed.transform.position);
 			if (oreType > 0) {
-				inventory.Add(oreType);
+				//inventory.Add(oreType);
+				inventory[oreType] ++;
 			}
 
 			Destroy(tileBeingDestroyed);

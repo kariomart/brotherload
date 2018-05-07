@@ -25,7 +25,7 @@ public class UpgradeUI : MonoBehaviour {
 
 	public void displayFuelInfo() {
 		
-		float fuel = Player.me.fuel / Player.me.fueltankSize;
+		float fuel = Mathf.Round((Player.me.fuel / Player.me.fueltankSize) * 100);
 		float price = (Player.me.fueltankSize - Player.me.fuel) * Master.me.fuelRate;
 		upgradeInfo.SetText("FUEL PERCENTAGE: " + fuel + " %\nFUEL COST: " + price);
 		selectedUpgrade = "fuel";
@@ -35,12 +35,28 @@ public class UpgradeUI : MonoBehaviour {
 	public void displayDrillUpgradeInfo() {
 
 		Drill drill = Master.me.drills[0];
-		string oreNames = "";
-		foreach(int i in drill.requiredOre) {
-			oreNames += Master.me.getOreName(i) + "\n";
+		string requiredOreNames = "";
+		string playerOreNames = "";
+
+		for(int i = 0; i < drill.requiredOre.Length; i++) {
+			requiredOreNames += Master.me.getOreName(i) + ": " + drill.requiredOre[i] + "\n";
 		}
 
-		upgradeInfo.SetText("DRILL NAME: " + drill.name + "\nDRILL SPEED: " + drill.speed + "\nREQUIRED ORE: \n" + oreNames);
+		for(int i = 0; i < Player.me.inventory.Length; i++) {
+			playerOreNames += Master.me.getOreName(i) + ": " + Player.me.inventory[i] + "\n";
+		}
+
+		upgradeInfo.SetText
+		("DRILL NAME: " + drill.name + 
+		"\nDRILL SPEED: " + drill.speed + 
+		"\n--------------" + 
+		"\nREQUIRED ORE: " + 
+		"\n--------------\n" +
+		requiredOreNames +
+		"\n\nINVENTORY : " + 
+		"\n--------------\n" +
+		playerOreNames);
+
 		selectedUpgrade = "drill";
 
 	}
@@ -48,12 +64,27 @@ public class UpgradeUI : MonoBehaviour {
 	public void displayHullUpgradeInfo() {
 		
 		Hull hull = Master.me.hulls[0];
-		string oreNames = "";
-		foreach(int i in hull.requiredOre) {
-			oreNames += Master.me.getOreName(i) + "\n";
+		string requiredOreNames = "";
+		string playerOreNames = "";
+
+		for(int i = 0; i < hull.requiredOre.Length; i++) {
+			requiredOreNames += Master.me.getOreName(i) + ": " + hull.requiredOre[i] + "\n";
 		}
 
-		upgradeInfo.SetText("HULL NAME: " + hull.name + "\nHULL ARMOR: " + hull.armor + "\nREQUIRED ORE: \n" + oreNames);
+		for(int i = 0; i < Player.me.inventory.Length; i++) {
+			playerOreNames += Master.me.getOreName(i) + ": " + Player.me.inventory[i] + "\n";
+		}
+
+		upgradeInfo.SetText
+		("HULL NAME: " + hull.name + 
+		"\nHULL ARMOR: " + hull.armor + 
+		"\n--------------" + 
+		"\nREQUIRED ORE: " + 
+		"\n--------------\n" +
+		requiredOreNames +
+		"\n\nINVENTORY : " + 
+		"\n--------------\n" +
+		playerOreNames);
 
 		selectedUpgrade = "hull";
 
@@ -84,15 +115,22 @@ public class UpgradeUI : MonoBehaviour {
 			int totalOre = 0;
 			string oreNames = "";
 
-			if (Player.me.inventory.Count == 0) { return; }
+			if (Player.me.numInvOres == 0) { 
+				upgradeInfo.SetText("inventory is empty!");
+				return; 
+			}
 
-			foreach(int i in Player.me.inventory) {
-				totalOreValue += Master.me.ores[i].value;
-				totalOre ++;
-				oreNames += Master.me.getOreName(i) + "\n";
+			for(int i = 0; i < Player.me.inventory.Length - 1; i++) {
+				
+				float oreValue = Master.me.ores[i].value;
+				oreValue *= Player.me.inventory[i];
+				totalOreValue += oreValue;
+				totalOre += Player.me.inventory[i];
+				oreNames += Master.me.getOreName(i) +": " + Player.me.inventory[i] + "\n";
+				Player.me.inventory[i] = 0;
 			}
 			
-			Player.me.inventory.Clear();
+			//Player.me.inventory.Clear();
 			upgradeInfo.SetText("ORES SENT HOME:\n" + oreNames + "\nTOTAL VALUE: " + totalOreValue);
 			Master.me.sendOresHome(totalOreValue, totalOre);
 		}
@@ -112,59 +150,59 @@ public class UpgradeUI : MonoBehaviour {
 
 	public void buyDrill() {
 
+		displayDrillUpgradeInfo();
 		Drill drill = Master.me.drills[0];
+		string missingText = "";
 
-			foreach(int ore in drill.requiredOre) {
-
-				if (Player.me.inventory.Contains(ore)) {
+			for(int i = 0; i < drill.requiredOre.Length - 1; i++) {
+				
+				if (Player.me.inventory[i] >= drill.requiredOre[i]) {
 					continue;
 				} else {
-					string text = upgradeInfo.text + "\n\n\nmissing 1 " + Master.me.getOreName(ore);
-					upgradeInfo.SetText(text);
+					missingText = "\nmissing 1 " + Master.me.getOreName(i);
+					upgradeInfo.SetText(upgradeInfo.text + missingText);
 					return;
 				}
 			}
 		
 			Debug.Log("cha ching!");
-			foreach(int ore in drill.requiredOre) {
-
-				if (Player.me.inventory.Contains(ore)) {
-					Player.me.inventory.Remove(ore);
-				}
-
+			
+			for(int i = 0; i < drill.requiredOre.Length - 1; i++) {
+				Player.me.inventory[i] -= drill.requiredOre[i];
 			}
 
-			Player.me.digSpeed = drill.speed;
-			Master.me.drills.Remove(drill);	
+
+		Player.me.digSpeed = drill.speed;
+		Master.me.drills.Remove(drill);	
+		displayDrillUpgradeInfo();
 	}
 
 	public void buyHull() {
 
 		Hull hull = Master.me.hulls[0];
 
-			foreach(int ore in hull.requiredOre) {
-
-				if (Player.me.inventory.Contains(ore)) {
-					continue;
-				} else {
-					string text = upgradeInfo.text + "\n\n\nmissing 1 " + Master.me.getOreName(ore);
-					upgradeInfo.SetText(text);
-					return;
-				}
+		for(int i = 0; i < hull.requiredOre.Length - 1; i++) {
+			
+			if (Player.me.inventory[i] >= hull.requiredOre[i]) {
+				continue;
+			} else {
+				string text = upgradeInfo.text + "\n\n\nmissing 1 " + Master.me.getOreName(i);
+				upgradeInfo.SetText(text);
+				return;
 			}
+		}
+	
+		Debug.Log("cha ching!");
 		
-			Debug.Log("cha ching!");
-			foreach(int ore in hull.requiredOre) {
+		for(int i = 0; i < hull.requiredOre.Length - 1; i++) {
+			Player.me.inventory[i] -= hull.requiredOre[i];
+		}
 
-				if (Player.me.inventory.Contains(ore)) {
-					Player.me.inventory.Remove(ore);
-				}
 
-			}
-
-			Player.me.armor = hull.armor;
-			Master.me.hulls.Remove(hull);	
-	}
+		Player.me.armor = hull.armor;
+		Master.me.hulls.Remove(hull);
+		displayHullUpgradeInfo();	
+	 }
 
 
 		

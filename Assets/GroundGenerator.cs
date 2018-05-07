@@ -51,6 +51,7 @@ public class GroundGenerator : MonoBehaviour {
 
 		generateMapData();
 		CA();
+		shrinePass();
 		cleanupTiles();
 
 	}
@@ -211,7 +212,14 @@ public class GroundGenerator : MonoBehaviour {
 
 		for (int x = 0; x < groundWidth; x++) {
 			for (int y = 0; y < groundHeight; y++) {
-				tileObjects[x ,y].SetActive(tiles[x, y] >= 0);
+				GameObject tile = tileObjects[x,y];
+				int oreType = tiles[x,y];
+
+				tile.SetActive(tiles[x, y] >= 0);
+				if (oreType >= 0) {
+					tile.GetComponentInChildren<SpriteRenderer>().color = Master.me.ores[oreType].color;
+					tile.gameObject.name = Master.me.ores[oreType].name;
+				}
 			}
 		}
 	}
@@ -245,6 +253,34 @@ public class GroundGenerator : MonoBehaviour {
 		}
 
 		trickleCounter ++;
+	}
+
+	void shrinePass() {
+
+		for (int x = 0; x < groundWidth; x++) {
+			for (int y = 0; y < groundHeight; y++) {
+
+				if (Random.value < 0.01f && x >  5 && x < groundWidth - 5 && y > 5 && y < groundHeight - 5) {
+					Debug.Log("SHRINE SPAWN");
+					spawnShrine(x, y);
+
+				}
+			}
+		}
+
+		updateDisplay();
+	}
+
+	void spawnShrine(int a, int b) {
+
+		Debug.Log(a + " " + b);
+		for (int x = 0; x < 5; x++) {
+			for (int y = 0; y < 5; y++) {
+
+				//Debug.Log("test");
+				tiles[a + x, b + y] = Master.me.shrine[x, y];
+			}
+		}
 	}
 		
 
