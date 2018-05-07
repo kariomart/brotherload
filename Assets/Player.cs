@@ -259,7 +259,6 @@ public class Player : MonoBehaviour {
 		if (coll.gameObject.tag == "platform") {
 			onPlatform = true;
 			UIController.me.toggleUpgradeDisplay();
-			Debug.Log(UpgradeUI.me);
 			UpgradeUI.me.displayInventory();
 			//offsetCamera();
 		}
@@ -300,5 +299,9 @@ public class Player : MonoBehaviour {
 		Vector3 pos = Camera.main.transform.localPosition;
 		Camera.main.transform.position = new Vector3(0, 0, pos.z);
 
+	}
+
+	public void startPosition() {
+		
 	}
 }

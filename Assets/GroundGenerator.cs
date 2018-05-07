@@ -35,7 +35,7 @@ public class GroundGenerator : MonoBehaviour {
 
 	public int[] trickleCounters;
 	public int trickleCounter;
-	public bool trickled;
+	public bool trickled = true;
 
 
 	// Use this for initialization
@@ -57,6 +57,7 @@ public class GroundGenerator : MonoBehaviour {
 		CA();
 		shrinePass();
 		cleanupTiles();
+		trickled = false;
 
 		if (Master.me.numShrines == 0) {
 			spawnShrine(Random.Range(6, groundWidth - 6), Random.Range(6, 20));
@@ -64,14 +65,13 @@ public class GroundGenerator : MonoBehaviour {
 
 		wall1.transform.position = new Vector3(0, transform.position.y, transform.position.z);
 		wall2.transform.position = new Vector3(groundWidth, transform.position.y, transform.position.z);
-		Player.me.transform.position = new Vector3(thePad.transform.position.x, thePad.transform.position.y  + 10, Player.me.transform.position.z);
 
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-		if (Input.GetKeyDown(KeyCode.R)) {
+		if (Input.GetKeyDown(KeyCode.Escape)) {
 			Application.LoadLevel(0);
 		}
 
@@ -380,6 +380,10 @@ public class GroundGenerator : MonoBehaviour {
 			return groundTile;
 		}
 
+	}
+
+	public void setPlayerPos() {
+		Player.me.transform.position = new Vector3(thePad.transform.position.x, thePad.transform.position.y  + 10, Player.me.transform.position.z);
 	}
 
 }
