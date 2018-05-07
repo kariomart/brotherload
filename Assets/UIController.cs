@@ -7,6 +7,7 @@ public class UIController : MonoBehaviour {
 
 
 	public static UIController me;
+	public UpgradeUI upgrade;
 	public GameObject upgradeUI;
 	public GameObject statUI;
 
@@ -22,6 +23,7 @@ public class UIController : MonoBehaviour {
 	void Start () {
 
 		me = this;
+		upgrade = GetComponentInChildren<UpgradeUI>();
 		
 	}
 	
@@ -32,11 +34,12 @@ public class UIController : MonoBehaviour {
 		
 	}
 
+
 	void updateUI() {
 
 		moneyUI.SetText("MONEY\n" + Player.me.money);
 		depthUI.SetText("DEPTH\n" + (int)(Player.me.transform.position.y - (GroundGenerator.me.groundHeight)));
-		hullUI.SetText("HULL\n" + Player.me.armor);
+		hullUI.SetText("HULL\n" + Player.me.numInvOres + "/" + Player.me.inventorySize);
 		fuelUI.SetText("FUEL\n" + Mathf.Round((Player.me.fuel / Player.me.fueltankSize) * 100) + "%");
 
 		if (Master.me.oreInSpace) {

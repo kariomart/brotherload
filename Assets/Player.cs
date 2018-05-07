@@ -56,8 +56,12 @@ public class Player : MonoBehaviour {
 	public float fuel;
 
 	public float armor;
-	
+
 	public bool onPlatform;
+
+	Drill drill;
+	Engine engine;
+	Hull hull;
 
 
 
@@ -67,7 +71,14 @@ public class Player : MonoBehaviour {
 		rb = GetComponent<Rigidbody2D>();
 		box = GetComponent<BoxCollider2D>();
 		fuel = fueltankSize;
+		drill = new Drill("Drill", new int[] {0, 0, 0, 0, 0, 0, 0, 0}, 30, 2);
+		drill = new Drill("Diamond Drill", new int[] {0, 0, 0, 0, 0, 0, 0, 30}, 5, 8);
+		engine = new Engine("Engine", new int[] {0, 0, 0, 0, 0, 0, 0, 0}, maxMoveSpeed, 1, fueltankSize);
+		hull = new Hull("Hull", new int[] {0, 0, 0, 0, 0, 0, 0, 0}, inventorySize);
 		inventory = new int[9];
+		inventory[8] = 1;
+
+		updateStats();
 
 	}
 	
@@ -179,7 +190,10 @@ public class Player : MonoBehaviour {
 		} 
 
 		rb.MovePosition((Vector2)transform.position + vel);
-		fuel -= fuelIdleRate;
+
+		if (!onPlatform) {
+			fuel -= fuelIdleRate;
+		}
 		//rb.velocity = vel;
 
 	}
@@ -200,9 +214,21 @@ public class Player : MonoBehaviour {
 		}
 
 		if (coll != null && coll.gameObject.tag == "ground") {
-			digging = true;
 			tileBeingDestroyed = coll.gameObject;
+			int oreType = Master.me.posToOre(tileBeingDestroyed.transform.position);
+
+			if (drill.mineableOre >= oreType && (numInvOres < inventorySize || oreType == 0)) {
+				digging = true;
+			}
 		}
+	}
+
+	public void updateStats() {
+
+		digSpeed = drill.speed;
+		fueltankSize = engine.fuelTank;
+		inventorySize = hull.size;
+
 	}
 
 
@@ -226,11 +252,6 @@ public class Player : MonoBehaviour {
 		colliding = false;
 		justJumped = true;
 
-		if (coll.gameObject.tag == "platform") {
-			UIController.me.toggleUpgradeDisplay();
-			onPlatform = false;
-			//resetCamera();
-		}
 	}
 
 	void OnTriggerEnter2D(Collider2D coll) {
@@ -238,9 +259,19 @@ public class Player : MonoBehaviour {
 		if (coll.gameObject.tag == "platform") {
 			onPlatform = true;
 			UIController.me.toggleUpgradeDisplay();
+			Debug.Log(UpgradeUI.me);
+			UpgradeUI.me.displayInventory();
 			//offsetCamera();
 		}
+	}
 
+	void OnTriggerExit2D(Collider2D coll) {
+
+		if (coll.gameObject.tag == "platform") {
+			onPlatform = false;
+			UIController.me.toggleUpgradeDisplay();
+			//offsetCamera();
+		}
 	}
 
 	public void stopGoingThisWay(Vector2 a) {

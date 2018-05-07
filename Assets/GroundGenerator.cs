@@ -6,6 +6,7 @@ public class GroundGenerator : MonoBehaviour {
 
 	public static GroundGenerator me;
 	public GameObject thePad;
+	public AudioSource soundtrack;
 
 	public GameObject groundTile;
 
@@ -68,13 +69,17 @@ public class GroundGenerator : MonoBehaviour {
 			Application.LoadLevel(0);
 		}
 
+		if (Input.GetKeyDown(KeyCode.Alpha9)) {
+			soundtrack.mute = !soundtrack.mute;
+		}
+
 
 	}
 
 	void FixedUpdate() {
 
 		 if (!trickled) {
-			trickleTiles();
+			//trickleTiles();
 		 }
 
 	}
@@ -202,15 +207,23 @@ public class GroundGenerator : MonoBehaviour {
 			oreType = 0;
 		}
 
+		//Debug.Log(Master.me.ores[oreType].name + " " + y + " " + Master.me.ores[oreType].minDepth);
+		//Debug.Log(y < Master.me.ores[oreType].minDepth);
 		if (Random.value < 0.1f) {
 			oreType = -1;
 		}
 		
-		if (oreType >= 0) {
+
+		if (oreType >= 0 && y < Master.me.ores[oreType].minDepth) {
+			//Debug.Log("GOOD TILE");
 			tile.GetComponentInChildren<SpriteRenderer>().color = Master.me.ores[oreType].color;
 			tile.gameObject.name = Master.me.ores[oreType].name;
 		} else {
-			//tile.GetComponentInChildren<SpriteRenderer>().color = new Color(0, 0, 0, 0);
+			//Debug.Log("BAD TILE");
+			oreType = 0;
+			tile.GetComponentInChildren<SpriteRenderer>().color = Master.me.ores[oreType].color;
+			tile.gameObject.name = Master.me.ores[oreType].name;
+			
 		}
 
 		tiles[x, y] = oreType;
@@ -284,7 +297,7 @@ public class GroundGenerator : MonoBehaviour {
 
 	void spawnShrine(int a, int b) {
 
-		Debug.Log(a + " " + b);
+//		Debug.Log(a + " " + b);
 		Master.me.numShrines ++;
 		for (int x = 0; x < 5; x++) {
 			for (int y = 0; y < 5; y++) {

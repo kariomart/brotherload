@@ -6,13 +6,13 @@ public class Hull {
 
 	public string name;
 	public int[] requiredOre;
-	public float armor;
+	public int size;
 
-	public Hull(string name, int[] requiredOre, float armor) {
+	public Hull(string name, int[] requiredOre, int size) {
 
 		this.name = name;
 		this.requiredOre = requiredOre;
-		this.armor = armor;
+		this.size = size;
 
 	}
 

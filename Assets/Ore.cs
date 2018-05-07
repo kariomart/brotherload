@@ -8,13 +8,16 @@ public class Ore {
 	public float depthPref;
 	public float value;
 	public Color color;
+	public int minDepth;
 
-	public Ore(string name, float depthPref, float value, Color color) {
+	public Ore(string name, float depthPref, float value, int minDepth, Color color) {
 
 		this.name = name;
 		this.depthPref = depthPref;
 		this.value = value;
 		this.color = color;
+		this.minDepth = minDepth;
+
 
 	}
 

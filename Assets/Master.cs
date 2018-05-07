@@ -8,6 +8,7 @@ public class Master : MonoBehaviour {
 	public Ore[] ores;
 	public List<Drill> drills = new List<Drill>();
 	public List<Hull> hulls = new List<Hull>();
+	public List<Engine> engines = new List<Engine>();
 
 	public int[,] shrine;
 	public int numShrines;
@@ -29,6 +30,7 @@ public class Master : MonoBehaviour {
 
 		addOres();		
 		addDrills();
+		addEngines();
 		addHulls();
 		makeShrine();
 
@@ -56,7 +58,7 @@ public class Master : MonoBehaviour {
 			packageTime = 0;
 			oreInSpace = true;
 			orePackageValue = value;
-			packageTimer = Random.Range(30, 50) * totalOre;
+			packageTimer = Random.Range(100, 200) * totalOre;
 		}
 	}
 
@@ -71,34 +73,46 @@ public class Master : MonoBehaviour {
 		};	
 	}
 
+	void addEngines() {
+
+		engines.Add(new Engine("Scrap Engine", new int[] {0, 3, 3, 3, 0, 0, 0, 0}, 6, .8f, 3000f));
+		engines.Add(new Engine("24Karat Vault", new int[] {0, 0, 0, 0, 0, 30, 0, 0}, 7, .6f, 5000f));
+		engines.Add(new Engine("Silvium Engine", new int[] {0, 0, 0, 0, 20, 0, 10, 0}, 8, .3f, 8000f));
+		engines.Add(new Engine("Diamond Engine", new int[] {0, 0, 0, 0, 0, 0, 0, 50}, 8, .3f, 15000f));
+
+	}
+
 	void addHulls() {
 
-		hulls.Add(new Hull("hull1", new int[] {0, 3, 0, 0, 0, 0, 0, 0}, 5));
-		hulls.Add(new Hull("hull2", new int[] {0, 0, 3, 0, 0, 0, 0, 0}, 10));
-		hulls.Add(new Hull("hull3", new int[] {0, 0, 0, 3, 0, 0, 0, 0}, 15));
+		hulls.Add(new Hull("hull1", new int[] {0, 3, 0, 0, 0, 0, 0, 0}, 20));
+		hulls.Add(new Hull("hull2", new int[] {0, 0, 3, 0, 0, 0, 0, 0}, 50));
+		hulls.Add(new Hull("hull3", new int[] {0, 0, 0, 3, 0, 0, 0, 0}, 100));
 
 	}
 
 	void addDrills() {
 
-		drills.Add(new Drill("drill1", new int[] {0, 3, 0, 0, 0, 0, 0, 0}, 18));
-		drills.Add(new Drill("drill2", new int[] {0, 0, 3, 0, 0, 0, 0, 0}, 16));
-		drills.Add(new Drill("drill3", new int[] {0, 0, 0, 3, 0, 0, 0, 0}, 14));
+		drills.Add(new Drill("Copper Drill", new int[] {0, 10, 0, 0, 0, 0, 0, 0}, 25, 3));
+		drills.Add(new Drill("Tiron Drill", new int[] {0, 0, 8, 8, 0, 0, 0, 0}, 22, 5));
+		drills.Add(new Drill("Silver Drill", new int[] {0, 0, 0, 0, 10, 0, 0, 0}, 20, 5));
+		drills.Add(new Drill("Gold Drill", new int[] {0, 0, 0, 0, 0, 10, 0, 0}, 15, 6));
+		drills.Add(new Drill("Platinum Drill", new int[] {0, 0, 0, 0, 0, 0, 15, 0}, 12, 7));
+		drills.Add(new Drill("Diamond Drill", new int[] {0, 0, 0, 0, 0, 0, 0, 30}, 5, 8));
 
 	}
 
 	void addOres() {
 
 		ores = new Ore[9];
-		ores[0] = new Ore("Dirt", 0, 0, rgbToFloat(51f, 51f, 51f));
-		ores[1] = new Ore("Copper", .9f, 50f, rgbToFloat(221f, 136f, 85f));
-		ores[2] = new Ore("Tin", .8f, 100f, rgbToFloat(0f, 0, 170f));
-		ores[3] = new Ore("Iron", .7f, 150f, rgbToFloat(255f, 119f, 119f));
-		ores[4] = new Ore("Silver", .6f, 300f, rgbToFloat(170f, 255f, 102f));
-		ores[5] = new Ore("Gold", .5f, 350f, rgbToFloat(238f, 238f, 119f));
-		ores[6] = new Ore("Platinum", .3f, 400f, rgbToFloat(204f, 68f, 204f));
-		ores[7] = new Ore("Diamond", .1f, 450f, rgbToFloat(170f, 255f, 238f));
-		ores[8] = new Ore("Idol", .1f, 1000f, rgbToFloat(255f, 0f, 0f));
+		ores[0] = new Ore("Dirt", 0, 0, 100, rgbToFloat(51f, 51f, 51f));
+		ores[1] = new Ore("Copper", .9f, 50f, 98, rgbToFloat(221f, 136f, 85f));
+		ores[2] = new Ore("Tin", .8f, 100f, 95, rgbToFloat(0f, 0, 170f));
+		ores[3] = new Ore("Iron", .7f, 150f, 88, rgbToFloat(255f, 119f, 119f));
+		ores[4] = new Ore("Silver", .6f, 300f, 80, rgbToFloat(170f, 255f, 102f));
+		ores[5] = new Ore("Gold", .5f, 350f, 65, rgbToFloat(238f, 238f, 119f));
+		ores[6] = new Ore("Platinum", .3f, 400f, 50, rgbToFloat(204f, 68f, 204f));
+		ores[7] = new Ore("Diamond", .1f, 450f, 30, rgbToFloat(170f, 255f, 238f));
+		ores[8] = new Ore("Idol", .1f, 1000f, 30, rgbToFloat(255f, 0f, 0f));
 
 	}
 
@@ -115,7 +129,7 @@ public class Master : MonoBehaviour {
 		int y = (int)pos.y;
 
 		int oreType = GroundGenerator.me.tiles[x, y];
-		Debug.Log(ores[oreType].name);
+//		Debug.Log(ores[oreType].name);
 		return oreType;
 
 	}
