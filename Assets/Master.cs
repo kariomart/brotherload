@@ -103,16 +103,17 @@ public class Master : MonoBehaviour {
 
 	void addOres() {
 
+
 		ores = new Ore[9];
-		ores[0] = new Ore("Dirt", 0, 0, 100, rgbToFloat(51f, 51f, 51f));
-		ores[1] = new Ore("Copper", .9f, 50f, 98, rgbToFloat(221f, 136f, 85f));
-		ores[2] = new Ore("Tin", .8f, 100f, 95, rgbToFloat(0f, 0, 170f));
-		ores[3] = new Ore("Iron", .7f, 150f, 88, rgbToFloat(255f, 119f, 119f));
-		ores[4] = new Ore("Silver", .6f, 300f, 80, rgbToFloat(170f, 255f, 102f));
-		ores[5] = new Ore("Gold", .5f, 350f, 65, rgbToFloat(238f, 238f, 119f));
-		ores[6] = new Ore("Platinum", .3f, 400f, 50, rgbToFloat(204f, 68f, 204f));
-		ores[7] = new Ore("Diamond", .1f, 450f, 30, rgbToFloat(170f, 255f, 238f));
-		ores[8] = new Ore("Idol", .1f, 1000f, 30, rgbToFloat(255f, 0f, 0f));
+		ores[0] = new Ore("Dirt", 0, 0, 1f, rgbToFloat(51f, 51f, 51f));
+		ores[1] = new Ore("Copper", .9f, 50f, .99f, rgbToFloat(221f, 136f, 85f));
+		ores[2] = new Ore("Tin", .8f, 100f, .97f, rgbToFloat(0f, 0, 170f));
+		ores[3] = new Ore("Iron", .7f, 150f, .94f, rgbToFloat(255f, 100f, 100f));
+		ores[4] = new Ore("Silver", .6f, 300f, .8f, rgbToFloat(170f, 255f, 102f));
+		ores[5] = new Ore("Gold", .5f, 350f, .65f, rgbToFloat(238f, 238f, 119f));
+		ores[6] = new Ore("Platinum", .3f, 400f, .5f, rgbToFloat(204f, 68f, 204f));
+		ores[7] = new Ore("Diamond", .1f, 450f, .3f, rgbToFloat(170f, 255f, 238f));
+		ores[8] = new Ore("Idol", .1f, 1000f, .3f, rgbToFloat(255f, 0f, 0f));
 
 	}
 

@@ -7,6 +7,8 @@ public class GroundGenerator : MonoBehaviour {
 	public static GroundGenerator me;
 	public GameObject thePad;
 	public AudioSource soundtrack;
+	public GameObject wall1;
+	public GameObject wall2;
 
 	public GameObject groundTile;
 
@@ -60,6 +62,10 @@ public class GroundGenerator : MonoBehaviour {
 			spawnShrine(Random.Range(6, groundWidth - 6), Random.Range(6, 20));
 		}
 
+		wall1.transform.position = new Vector3(0, transform.position.y, transform.position.z);
+		wall2.transform.position = new Vector3(groundWidth, transform.position.y, transform.position.z);
+		Player.me.transform.position = new Vector3(thePad.transform.position.x, thePad.transform.position.y  + 10, Player.me.transform.position.z);
+
 	}
 	
 	// Update is called once per frame
@@ -79,7 +85,7 @@ public class GroundGenerator : MonoBehaviour {
 	void FixedUpdate() {
 
 		 if (!trickled) {
-			//trickleTiles();
+			trickleTiles();
 		 }
 
 	}
@@ -106,8 +112,8 @@ public class GroundGenerator : MonoBehaviour {
 		tex.filterMode = FilterMode.Point;
 		tex.Apply();
 		quad.material.mainTexture = tex;
-		Player.me.transform.position = new Vector2(groundWidth / 2, groundHeight);
-		//thePad.transform.position = new Vector3(Player.me.transform.position.x, Player.me.transform.position.y + 3, Player.me.transform.position.z);
+		thePad.transform.position = new Vector2(groundWidth/2, groundHeight + 2);
+		//Player.me.transform.position = new Vector2(groundWidth / 2, groundHeight);
 
 	}
 
@@ -203,18 +209,15 @@ public class GroundGenerator : MonoBehaviour {
 			break;
 		}
 
-		if(Random.value < Mathf.Pow(((float)y/(float)groundHeight), 3)){
-			oreType = 0;
-		}
+		// if(Random.value < Mathf.Pow(((float)y/(float)groundHeight), 2)){
+		// 	oreType = 0;
+		// }
 
 		//Debug.Log(Master.me.ores[oreType].name + " " + y + " " + Master.me.ores[oreType].minDepth);
 		//Debug.Log(y < Master.me.ores[oreType].minDepth);
-		if (Random.value < 0.1f) {
-			oreType = -1;
-		}
 		
 
-		if (oreType >= 0 && y < Master.me.ores[oreType].minDepth) {
+		if (oreType >= 0 && y < groundHeight * Master.me.ores[oreType].minDepth) {
 			//Debug.Log("GOOD TILE");
 			tile.GetComponentInChildren<SpriteRenderer>().color = Master.me.ores[oreType].color;
 			tile.gameObject.name = Master.me.ores[oreType].name;
@@ -224,6 +227,10 @@ public class GroundGenerator : MonoBehaviour {
 			tile.GetComponentInChildren<SpriteRenderer>().color = Master.me.ores[oreType].color;
 			tile.gameObject.name = Master.me.ores[oreType].name;
 			
+		}
+
+		if (Random.value < 0.1f) {
+			oreType = -1;
 		}
 
 		tiles[x, y] = oreType;
@@ -284,7 +291,7 @@ public class GroundGenerator : MonoBehaviour {
 		for (int x = 0; x < groundWidth; x++) {
 			for (int y = 0; y < groundHeight; y++) {
 
-				if (Random.value < 0.001f && x >  5 && x < groundWidth - 5 && y < 50 && y < groundHeight - 5) {
+				if (Random.value < 0.001f && x >  5 && x < groundWidth - 5 && y < groundHeight*.3f && y < groundHeight - 5) {
 					Debug.Log("SHRINE SPAWN");
 					spawnShrine(x, y);
 
