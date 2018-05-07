@@ -44,6 +44,9 @@ public class UpgradeUI : MonoBehaviour {
 
 	public void displayFuelInfo() {
 		
+		if (!SoundController.me.checkIfPlaying(SoundController.me.shopButtons)) {
+			SoundController.me.PlaySound(SoundController.me.shopButtons);
+		}
 		float fuel = Mathf.Round((Player.me.fuel / Player.me.fueltankSize) * 100);
 		float price = (Player.me.fueltankSize - Player.me.fuel) * Master.me.fuelRate;
 		upgradeInfo.SetText("FUEL PERCENTAGE: " + fuel + " %\nFUEL COST: " + price + "\n\nMONEY: " + Player.me.money);
@@ -53,6 +56,7 @@ public class UpgradeUI : MonoBehaviour {
 
 	public void displayDrillUpgradeInfo() {
 
+		SoundController.me.PlaySound(SoundController.me.shopButtons);
 		Drill drill = Master.me.drills[0];
 		string requiredOreNames = "";
 		string playerOreNames = "";
@@ -82,6 +86,7 @@ public class UpgradeUI : MonoBehaviour {
 
 		public void displayEngineUpgradeInfo() {
 
+		SoundController.me.PlaySound(SoundController.me.shopButtons);
 		Engine engine = Master.me.engines[0];
 		string requiredOreNames = "";
 		string playerOreNames = "";
@@ -112,6 +117,7 @@ public class UpgradeUI : MonoBehaviour {
 
 	public void displayHullUpgradeInfo() {
 		
+		SoundController.me.PlaySound(SoundController.me.shopButtons);
 		Hull hull = Master.me.hulls[0];
 		string requiredOreNames = "";
 		string playerOreNames = "";
@@ -172,6 +178,13 @@ public class UpgradeUI : MonoBehaviour {
 
 			if (Player.me.numInvOres == 0) { 
 				upgradeInfo.SetText("inventory is empty!");
+				SoundController.me.PlaySound(SoundController.me.shopError);
+				return; 
+			}
+
+			if (Master.me.oreInSpace) { 
+				upgradeInfo.SetText("there are already ores in space!");
+				SoundController.me.PlaySound(SoundController.me.shopError);
 				return; 
 			}
 
@@ -194,6 +207,7 @@ public class UpgradeUI : MonoBehaviour {
 			//Player.me.inventory.Clear();
 			upgradeInfo.SetText("ORES SENT HOME:\n" + oreNames + "\nTOTAL VALUE: " + totalOreValue);
 			Master.me.sendOresHome(totalOreValue, totalOre);
+			SoundController.me.PlaySound(SoundController.me.sentOres);
 		}
 
 	}
@@ -205,6 +219,9 @@ public class UpgradeUI : MonoBehaviour {
 		if (Player.me.money > price) {
 			Player.me.money -= price;
 			Player.me.fuel = Player.me.fueltankSize;
+			SoundController.me.PlaySound(SoundController.me.boughtItem);
+		} else {
+			SoundController.me.PlaySound(SoundController.me.shopError);
 		}
 
 	}
@@ -222,12 +239,13 @@ public class UpgradeUI : MonoBehaviour {
 				} else {
 					missingText = "\nmissing 1 " + Master.me.getOreName(i);
 					upgradeInfo.SetText(upgradeInfo.text + missingText);
+					SoundController.me.PlaySound(SoundController.me.shopError);
 					return;
 				}
 			}
 		
-			Debug.Log("cha ching!");
-			
+			//Debug.Log("cha ching!");
+			SoundController.me.PlaySound(SoundController.me.boughtItem);
 			for(int i = 0; i < engine.requiredOre.Length - 1; i++) {
 				Player.me.inventory[i] -= engine.requiredOre[i];
 			}
@@ -250,12 +268,13 @@ public class UpgradeUI : MonoBehaviour {
 				} else {
 					missingText = "\nmissing 1 " + Master.me.getOreName(i);
 					upgradeInfo.SetText(upgradeInfo.text + missingText);
+					SoundController.me.PlaySound(SoundController.me.shopError);
 					return;
 				}
 			}
 		
 			Debug.Log("cha ching!");
-			
+			SoundController.me.PlaySound(SoundController.me.boughtItem);
 			for(int i = 0; i < drill.requiredOre.Length - 1; i++) {
 				Player.me.inventory[i] -= drill.requiredOre[i];
 			}
@@ -277,12 +296,13 @@ public class UpgradeUI : MonoBehaviour {
 			} else {
 				string text = upgradeInfo.text + "\n\n\nmissing 1 " + Master.me.getOreName(i);
 				upgradeInfo.SetText(text);
+				SoundController.me.PlaySound(SoundController.me.shopError);
 				return;
 			}
 		}
 	
 		Debug.Log("cha ching!");
-		
+		SoundController.me.PlaySound(SoundController.me.boughtItem);
 		for(int i = 0; i < hull.requiredOre.Length - 1; i++) {
 			Player.me.inventory[i] -= hull.requiredOre[i];
 		}

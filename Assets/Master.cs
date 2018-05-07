@@ -11,6 +11,8 @@ public class Master : MonoBehaviour {
 	public List<Engine> engines = new List<Engine>();
 	public GameObject planet;
 
+	public AudioSource outroAudio;
+
 	public int minPlanets;
 	public int maxPlanets;
 	public float minDistance;
@@ -52,8 +54,12 @@ public class Master : MonoBehaviour {
 			//spawnPlanets();
 		}
 
-		if (Input.GetKeyDown(KeyCode.Alpha8)){
+		if (Input.GetKeyDown(KeyCode.Alpha1)){
 			Player.me.godMode();
+		}
+
+		if (Input.GetKeyDown(KeyCode.Alpha8)){
+			SoundController.me.toggleMute();
 		}
 		if (packageTime <= packageTimer && oreInSpace) {
 			packageTime ++;
@@ -62,6 +68,7 @@ public class Master : MonoBehaviour {
 		else if (packageTime > packageTimer && oreInSpace) {
 			oreInSpace = false;
 			Player.me.money += orePackageValue;
+			SoundController.me.PlaySound(SoundController.me.oreRecieved, 1f);
 			packageTime = 0;
 
 			if (idolsSent >= numShrines) {
@@ -72,6 +79,9 @@ public class Master : MonoBehaviour {
 		if (gameover) {
 			GroundGenerator.me.setPlayerPos();
 			UIController.me.gameObject.SetActive(false);
+			SoundController.me.toggleMute();
+			GroundGenerator.me.soundtrack.mute = true;
+			outroAudio.gameObject.SetActive(true);
 			Player.me.wonGame = true;
 			spawnPlanets();
 			gameover = false;
@@ -128,7 +138,7 @@ public class Master : MonoBehaviour {
 	void addEngines() {
 
 		engines.Add(new Engine("Scrap Engine", new int[] {0, 3, 3, 3, 0, 0, 0, 0}, 6, .8f, 3000f));
-		engines.Add(new Engine("24Karat Vault", new int[] {0, 0, 0, 0, 0, 30, 0, 0}, 7, .6f, 5000f));
+		engines.Add(new Engine("24Karat", new int[] {0, 0, 0, 0, 0, 30, 0, 0}, 7, .6f, 5000f));
 		engines.Add(new Engine("Silvium Engine", new int[] {0, 0, 0, 0, 20, 0, 10, 0}, 8, .3f, 8000f));
 		engines.Add(new Engine("Diamond Engine", new int[] {0, 0, 0, 0, 0, 0, 0, 50}, 8, .3f, 15000f));
 
@@ -136,9 +146,9 @@ public class Master : MonoBehaviour {
 
 	void addHulls() {
 
-		hulls.Add(new Hull("hull1", new int[] {0, 3, 0, 0, 0, 0, 0, 0}, 20));
-		hulls.Add(new Hull("hull2", new int[] {0, 0, 3, 0, 0, 0, 0, 0}, 50));
-		hulls.Add(new Hull("hull3", new int[] {0, 0, 0, 3, 0, 0, 0, 0}, 100));
+		hulls.Add(new Hull("Tipper", new int[] {0, 8, 8, 0, 0, 0, 0, 0}, 20));
+		hulls.Add(new Hull("Brass Box", new int[] {0, 0, 3, 5, 8, 5, 0, 0}, 50));
+		hulls.Add(new Hull("The Vault", new int[] {0, 0, 0, 0, 10, 10, 10, 0}, 100));
 
 	}
 

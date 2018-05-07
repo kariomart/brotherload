@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GroundGenerator : MonoBehaviour {
+	
 
 	public static GroundGenerator me;
 	public GameObject thePad;
 	public AudioSource soundtrack;
 	public GameObject wall1;
 	public GameObject wall2;
+	public GameObject wall3;
 
 	public GameObject groundTile;
 
@@ -65,6 +67,7 @@ public class GroundGenerator : MonoBehaviour {
 
 		wall1.transform.position = new Vector3(0, transform.position.y, transform.position.z);
 		wall2.transform.position = new Vector3(groundWidth, transform.position.y, transform.position.z);
+		wall3.transform.position = new Vector3(groundWidth / 2, 0, transform.position.z);
 		setPlayerPos();
 
 	}
@@ -86,7 +89,7 @@ public class GroundGenerator : MonoBehaviour {
 	void FixedUpdate() {
 
 		 if (!trickled) {
-			//trickleTiles();
+			trickleTiles();
 		 }
 
 	}

@@ -4,6 +4,19 @@ using UnityEngine;
 
 public class SoundController : MonoBehaviour {
 
+	public AudioClip ore;
+	public AudioClip oreRecieved;
+	public AudioClip idol;
+	public AudioClip upgradeShop;
+	public AudioClip upgradeShopLeft;
+	public AudioClip lowFuel;
+	public AudioClip dig;
+	public AudioClip shopError;
+	public AudioClip sentOres;
+	public AudioClip shopButtons;
+	public AudioClip miningError;
+	public AudioClip boughtItem;
+
 	public static SoundController me;
 	public GameObject audSource;
 	public AudioSource[] audSources;
@@ -34,6 +47,35 @@ public class SoundController : MonoBehaviour {
 
 	}
 
+	public void toggleMute() {
+	
+		for (int i = 0; i < audSources.Length; i++) {
+			audSources[i].mute = !audSources[i].mute;
+		}
+
+	}
+
+	public bool checkIfPlaying(AudioClip clip) {
+
+		for (int i = 0; i < audSources.Length; i++) {
+			if (clip == audSources[i].clip) {
+				return true;
+			}
+		}
+		return false; 
+	}
+
+	public bool checkIfPlayed(AudioClip clip) {
+
+		for (int i = 0; i < audSources.Length; i++) {
+			if (clip == audSources[i].clip && !audSources[i].isPlaying) {
+				return true;
+			}
+		}
+		return false; 
+
+	}
+
 	public static SoundController Get() {
 		if (me == null) {
 			me = (SoundController)FindObjectOfType(typeof(SoundController));
@@ -43,7 +85,7 @@ public class SoundController : MonoBehaviour {
 	}
 
 
-	public void PlaySound(AudioClip snd, float vol)
+	public void PlaySound(AudioClip snd, float vol = 1f)
 
 	{
 		//		Debug.Log (snd);

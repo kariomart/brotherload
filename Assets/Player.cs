@@ -81,7 +81,7 @@ public class Player : MonoBehaviour {
 		engine = new Engine("Engine", new int[] {0, 0, 0, 0, 0, 0, 0, 0}, maxMoveSpeed, 1, fueltankSize);
 		hull = new Hull("Hull", new int[] {0, 0, 0, 0, 0, 0, 0, 0}, inventorySize);
 		inventory = new int[9];
-		inventory[8] = 3;
+		//
 		updateStats();
 
 	}
@@ -200,7 +200,18 @@ public class Player : MonoBehaviour {
 			if (oreType > 0) {
 				//inventory.Add(oreType);
 				inventory[oreType] ++;
+				SoundController.me.PlaySound(SoundController.me.ore, 1f);
 			}
+
+			if (oreType == 8) {
+				SoundController.me.PlaySound(SoundController.me.idol, 1f);
+			}
+
+			if (oreType == 0) {
+				SoundController.me.PlaySound(SoundController.me.dig, .2f);
+			}
+
+
 
 			Destroy(tileBeingDestroyed);
 			tileBeingDestroyed = null;
@@ -212,6 +223,9 @@ public class Player : MonoBehaviour {
 		if (!onPlatform) {
 			if (fuel <= 500) {
 				fuel -= fuelIdleRate * .5f;
+				if (!SoundController.me.checkIfPlaying(SoundController.me.lowFuel)) {
+					SoundController.me.PlaySound(SoundController.me.lowFuel);
+				}
 			} else {
 				fuel -= fuelIdleRate;
 			}	
@@ -246,6 +260,10 @@ public class Player : MonoBehaviour {
 			if (drill.mineableOre >= oreType && (numInvOres < inventorySize || oreType == 0)) {
 				digging = true;
 			}
+
+			if (numInvOres >= inventorySize || drill.mineableOre < oreType) {
+				SoundController.me.PlaySound(SoundController.me.miningError, .5f);
+			} 
 		}
 	}
 
@@ -286,6 +304,7 @@ public class Player : MonoBehaviour {
 			onPlatform = true;
 			UIController.me.toggleUpgradeDisplay();
 			UpgradeUI.me.displayInventory();
+			SoundController.me.PlaySound(SoundController.me.upgradeShop, 1f);
 			//offsetCamera();
 		}
 	}
@@ -295,6 +314,7 @@ public class Player : MonoBehaviour {
 		if (coll.gameObject.tag == "platform") {
 			onPlatform = false;
 			UIController.me.toggleUpgradeDisplay();
+			SoundController.me.PlaySound(SoundController.me.upgradeShopLeft);
 			//offsetCamera();
 		}
 	}

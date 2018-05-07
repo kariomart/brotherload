@@ -50,10 +50,10 @@ public class BootScreen : MonoBehaviour {
 
 	public void endEdit() {
 
-		Debug.Log(input.text);
+//		Debug.Log(input.text);
 		string text = input.text.ToLower();
 		if (text.Contains("run motherload")) {
-			Debug.Log("run the game!");
+//			Debug.Log("run the game!");
 			ran = true;
 		} else {
 			input.text = "";
