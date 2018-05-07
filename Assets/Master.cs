@@ -9,6 +9,12 @@ public class Master : MonoBehaviour {
 	public List<Drill> drills = new List<Drill>();
 	public List<Hull> hulls = new List<Hull>();
 	public List<Engine> engines = new List<Engine>();
+	public GameObject planet;
+
+	public int minPlanets;
+	public int maxPlanets;
+	public float minDistance;
+	public float maxDistance;
 
 	public int[,] shrine;
 	public int numShrines;
@@ -20,14 +26,12 @@ public class Master : MonoBehaviour {
 	public int packageTimer;
 	public int packageTime;
 
+	bool gameover;
+
 	// Use this for initialization
 
 	void Awake() {
 		me = this;
-	}
-
-	void Start () {
-
 		addOres();		
 		addDrills();
 		addEngines();
@@ -35,11 +39,22 @@ public class Master : MonoBehaviour {
 		makeShrine();
 
 	}
+
+	void Start () {
+
+
+	}
 	
 	// Update is called once per frame
 	void Update () {
 
+		if (Input.GetKeyDown(KeyCode.Space)) {
+			//spawnPlanets();
+		}
 
+		if (Input.GetKeyDown(KeyCode.Alpha8)){
+			Player.me.godMode();
+		}
 		if (packageTime <= packageTimer && oreInSpace) {
 			packageTime ++;
 		} 
@@ -48,8 +63,44 @@ public class Master : MonoBehaviour {
 			oreInSpace = false;
 			Player.me.money += orePackageValue;
 			packageTime = 0;
+
+			if (idolsSent >= numShrines) {
+			gameover = true;
+		}
+		}
+
+		if (gameover) {
+			GroundGenerator.me.setPlayerPos();
+			UIController.me.gameObject.SetActive(false);
+			Player.me.wonGame = true;
+			spawnPlanets();
+			gameover = false;
 		}
 		
+	}
+
+	void spawnPlanets() {
+
+		int numPlanets = Random.Range(minPlanets, maxPlanets);
+		Vector2 basePos = GroundGenerator.me.transform.position;
+
+		for (int i = 0; i < numPlanets; i++) {
+			float rand1 = Random.Range(minDistance, maxDistance);
+			if (Random.value > 0.5f) { rand1 *= -1;}
+			float rand2 = Random.Range(minDistance, maxDistance);
+			if (Random.value > 0.5f) { rand1 *= -1;}
+
+			Vector2 randomPos = new Vector2(rand1, rand2); 
+
+			GameObject tempPlanet = Instantiate(planet, new Vector3(basePos.x + randomPos.x, basePos.x + randomPos.y, 0), Quaternion.identity);
+			PlanetGenerator tempGen = tempPlanet.GetComponent<PlanetGenerator>();
+			tempGen.groundHeight = Random.Range(15, 30);
+			tempGen.groundWidth = Random.Range(15, 30);
+			//tempGen.frequency = Random.Range(0.7f, 1f);
+			tempGen.spawnPlanet();
+
+		}
+
 	}
 
 	public void sendOresHome(float value, int totalOre) {
@@ -58,8 +109,9 @@ public class Master : MonoBehaviour {
 			packageTime = 0;
 			oreInSpace = true;
 			orePackageValue = value;
-			packageTimer = Random.Range(100, 200) * totalOre;
+			packageTimer = Random.Range(50, 150) * totalOre;
 		}
+
 	}
 
 	void makeShrine() {

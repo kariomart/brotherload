@@ -77,6 +77,7 @@ public class BootScreen : MonoBehaviour {
 		if (scrollCount >= textScrollTime) {
 			ran = false;
 			GroundGenerator.me.setPlayerPos();
+			Player.me.GetComponent<SpriteRenderer>().enabled = true;
 			startMenu.SetActive(false);
 		}
 

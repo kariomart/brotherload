@@ -6,6 +6,9 @@ using System.Linq;
 public class Player : MonoBehaviour {
 
 	public static Player me;
+	public GameObject reticle;
+	public GameObject thePad;
+	public Camera cam;
 
 	public float tuningScale = .001f;
 
@@ -23,6 +26,7 @@ public class Player : MonoBehaviour {
 	bool jumpFlag;
 	bool justJumped;
 	bool digging;
+	public bool wonGame;
 
 	public Vector2 vel;
 	public float moveAccel;
@@ -36,6 +40,7 @@ public class Player : MonoBehaviour {
 	public Transform digDownPt;
 	public Transform digLeftPt;
 	public Transform digRightPt;
+	public Vector2 padPos;
 	public int buttonHeldCounter;
 	public int digCounter;
 	public float digSpeed;
@@ -55,7 +60,7 @@ public class Player : MonoBehaviour {
 	public float fuelMovingRate;
 	public float fuel;
 
-	public float armor;
+	public float cameraRampUp;
 
 	public bool onPlatform;
 
@@ -70,14 +75,13 @@ public class Player : MonoBehaviour {
 		me = this;
 		rb = GetComponent<Rigidbody2D>();
 		box = GetComponent<BoxCollider2D>();
+		cam = Camera.main.GetComponent<Camera>();
 		fuel = fueltankSize;
 		drill = new Drill("Drill", new int[] {0, 0, 0, 0, 0, 0, 0, 0}, 30, 2);
-		drill = new Drill("Diamond Drill", new int[] {0, 0, 0, 0, 0, 0, 0, 30}, 5, 8);
 		engine = new Engine("Engine", new int[] {0, 0, 0, 0, 0, 0, 0, 0}, maxMoveSpeed, 1, fueltankSize);
 		hull = new Hull("Hull", new int[] {0, 0, 0, 0, 0, 0, 0, 0}, inventorySize);
 		inventory = new int[9];
-		inventory[8] = 1;
-
+		inventory[8] = 3;
 		updateStats();
 
 	}
@@ -85,6 +89,12 @@ public class Player : MonoBehaviour {
 	void Update () {
 
 		numInvOres = inventory.Sum();
+
+		if (Vector2.Distance(thePad.transform.position, transform.position) > 10) {
+			reticle.transform.position = transform.position + (thePad.transform.position - transform.position).normalized;
+		} else {
+			reticle.transform.position = transform.position;
+		}
 		float horizontal = Input.GetAxis("Horizontal");
 		
 		left = horizontal < 0;
@@ -131,6 +141,13 @@ public class Player : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
+
+		if (wonGame) {
+			//rb.isKinematic = true;
+			vel = Vector2.zero;
+			thePad.transform.position += Vector3.up * .05f;
+			cam.orthographicSize += .06f + cameraRampUp;
+		}
 
 		SetGrounded();
 
@@ -189,10 +206,19 @@ public class Player : MonoBehaviour {
 			tileBeingDestroyed = null;
 		} 
 
+
 		rb.MovePosition((Vector2)transform.position + vel);
 
 		if (!onPlatform) {
-			fuel -= fuelIdleRate;
+			if (fuel <= 500) {
+				fuel -= fuelIdleRate * .5f;
+			} else {
+				fuel -= fuelIdleRate;
+			}	
+		}
+
+		if (fuel <= 0) {
+			Application.LoadLevel(0);
 		}
 		//rb.velocity = vel;
 
@@ -301,7 +327,16 @@ public class Player : MonoBehaviour {
 
 	}
 
-	public void startPosition() {
-		
+	public void godMode() {
+
+		drill = Master.me.drills[Master.me.drills.Count - 1];
+		engine = Master.me.engines[Master.me.engines.Count - 1];
+		hull = Master.me.hulls[Master.me.hulls.Count - 1];
+		money = 100000f;
+		inventory[inventory.Length - 1] = 5;
+
+		updateStats();
+		fuel = fueltankSize;
 	}
+
 }

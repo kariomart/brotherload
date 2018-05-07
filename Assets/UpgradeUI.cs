@@ -181,7 +181,7 @@ public class UpgradeUI : MonoBehaviour {
 					Master.me.idolsSent = Player.me.inventory[i];
 				}
 				
-				Debug.Log(Master.me.getOreName(i));
+//				Debug.Log(Master.me.getOreName(i));
 				float oreValue = Master.me.ores[i].value;
 				oreValue *= Player.me.inventory[i];
 				totalOreValue += oreValue;

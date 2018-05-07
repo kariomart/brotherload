@@ -2,27 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GroundGenerator : MonoBehaviour {
+public class PlanetGenerator : MonoBehaviour {
 
-	public static GroundGenerator me;
-	public GameObject thePad;
-	public AudioSource soundtrack;
-	public GameObject wall1;
-	public GameObject wall2;
 
 	public GameObject groundTile;
 
-	public MeshRenderer quad;
-
-	BoxCollider2D box;
-	Rigidbody2D rb;
-	Texture2D tex;
 
 	public int groundWidth;
 	public int groundHeight;
 	public int mapStartY;
 
-	//public List<GameObject> tiles = new List<GameObject>();
 	public int[,] tiles;
 	public int[,] newTiles;
 	public GameObject[,] tileObjects;
@@ -33,63 +22,29 @@ public class GroundGenerator : MonoBehaviour {
 	public int caNeighbors;
 	public int caSteps;
 
-	public int[] trickleCounters;
-	public int trickleCounter;
-	public bool trickled = true;
-
-
+	
 	// Use this for initialization
 	void Start () {
 
-		me = this;
-		box = GetComponent<BoxCollider2D>();
-		rb = GetComponent<Rigidbody2D>();
 
-		tex = new Texture2D(groundWidth, groundHeight);
+		// if (Master.me.numShrines == 0) {
+		// 	spawnShrine(Random.Range(6, groundWidth - 6), Random.Range(6, 20));
+		// }
+	}
+
+	public void spawnPlanet() {
 
 		tiles = new int[groundWidth, groundHeight];
 		newTiles = new int[groundWidth, groundHeight];
 		tileObjects = new GameObject[groundWidth, groundHeight];
 
-		trickleCounters = new int[2];
-
 		generateMapData();
 		CA();
 		shrinePass();
 		cleanupTiles();
-		trickled = false;
-
-		if (Master.me.numShrines == 0) {
-			spawnShrine(Random.Range(6, groundWidth - 6), Random.Range(6, 20));
-		}
-
-		wall1.transform.position = new Vector3(0, transform.position.y, transform.position.z);
-		wall2.transform.position = new Vector3(groundWidth, transform.position.y, transform.position.z);
-		setPlayerPos();
 
 	}
 	
-	// Update is called once per frame
-	void Update () {
-
-		if (Input.GetKeyDown(KeyCode.Escape)) {
-			Application.LoadLevel(0);
-		}
-
-		if (Input.GetKeyDown(KeyCode.Alpha9)) {
-			soundtrack.mute = !soundtrack.mute;
-		}
-
-
-	}
-
-	void FixedUpdate() {
-
-		 if (!trickled) {
-			//trickleTiles();
-		 }
-
-	}
 
 
 	void generateMapData() {
@@ -102,19 +57,12 @@ public class GroundGenerator : MonoBehaviour {
 				transform.hierarchyCapacity = 10000;
 				float perlinVal = Mathf.PerlinNoise((float)x * frequency + xOffset, (float)y * frequency + yOffset);
 				int index = (int)(perlinVal * 10);
-				GameObject newTile = Instantiate(groundTile);
-				newTile.transform.position = new Vector2(x, y);
+				GameObject newTile = Instantiate(groundTile, transform);
+				newTile.transform.localPosition = new Vector2(x, y);
 				generateTile(index, newTile, x, y);
-				tex.SetPixel(x, y, new Color(perlinVal, perlinVal, perlinVal));
 
 			}
 		}
-
-		tex.filterMode = FilterMode.Point;
-		tex.Apply();
-		quad.material.mainTexture = tex;
-		thePad.transform.position = new Vector2(groundWidth/2, groundHeight + 2);
-		//Player.me.transform.position = new Vector2(groundWidth / 2, groundHeight);
 
 	}
 
@@ -210,21 +158,11 @@ public class GroundGenerator : MonoBehaviour {
 				oreType = 0;
 			break;
 		}
-
-		// if(Random.value < Mathf.Pow(((float)y/(float)groundHeight), 2)){
-		// 	oreType = 0;
-		// }
-
-		//Debug.Log(Master.me.ores[oreType].name + " " + y + " " + Master.me.ores[oreType].minDepth);
-		//Debug.Log(y < Master.me.ores[oreType].minDepth);
 		
-
 		if (oreType >= 0 && y < groundHeight * Master.me.ores[oreType].minDepth) {
-			//Debug.Log("GOOD TILE");
 			tile.GetComponent<SpriteRenderer>().color = Master.me.ores[oreType].color;
 			tile.gameObject.name = Master.me.ores[oreType].name;
 		} else {
-			//Debug.Log("BAD TILE");
 			oreType = 0;
 			tile.GetComponent<SpriteRenderer>().color = Master.me.ores[oreType].color;
 			tile.gameObject.name = Master.me.ores[oreType].name;
@@ -271,24 +209,6 @@ public class GroundGenerator : MonoBehaviour {
 		}
 	}
 
-	void trickleTiles() {
-
-
-		for(int i = 0; i < groundWidth; i++) {
-			GameObject tile = tileObjects[i, trickleCounter];
-
-			if (tile) {
-				tile.transform.parent = this.transform;
-			}
-		}
-
-		if (trickleCounter == groundHeight - 1) {
-			trickled = true;
-		}
-
-		trickleCounter ++;
-	}
-
 	void shrinePass() {
 
 		for (int x = 0; x < groundWidth; x++) {
@@ -308,7 +228,6 @@ public class GroundGenerator : MonoBehaviour {
 	void spawnShrine(int a, int b) {
 
 //		Debug.Log(a + " " + b);
-		Master.me.numShrines ++;
 		for (int x = 0; x < 5; x++) {
 			for (int y = 0; y < 5; y++) {
 
@@ -383,10 +302,6 @@ public class GroundGenerator : MonoBehaviour {
 			return groundTile;
 		}
 
-	}
-
-	public void setPlayerPos() {
-		Player.me.transform.position = new Vector3(thePad.transform.position.x, thePad.transform.position.y  + 10, Player.me.transform.position.z);
 	}
 
 }
