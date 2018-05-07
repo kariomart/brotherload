@@ -10,6 +10,8 @@ public class Master : MonoBehaviour {
 	public List<Hull> hulls = new List<Hull>();
 
 	public int[,] shrine;
+	public int numShrines;
+	public int idolsSent;
 
 	public float fuelRate;
 	public float orePackageValue;

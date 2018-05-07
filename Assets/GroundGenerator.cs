@@ -5,6 +5,7 @@ using UnityEngine;
 public class GroundGenerator : MonoBehaviour {
 
 	public static GroundGenerator me;
+	public GameObject thePad;
 
 	public GameObject groundTile;
 
@@ -54,10 +55,18 @@ public class GroundGenerator : MonoBehaviour {
 		shrinePass();
 		cleanupTiles();
 
+		if (Master.me.numShrines == 0) {
+			spawnShrine(Random.Range(6, groundWidth - 6), Random.Range(6, 20));
+		}
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+		if (Input.GetKeyDown(KeyCode.R)) {
+			Application.LoadLevel(0);
+		}
 
 
 	}
@@ -65,7 +74,7 @@ public class GroundGenerator : MonoBehaviour {
 	void FixedUpdate() {
 
 		 if (!trickled) {
-			//trickleTiles();
+			trickleTiles();
 		 }
 
 	}
@@ -93,6 +102,8 @@ public class GroundGenerator : MonoBehaviour {
 		tex.Apply();
 		quad.material.mainTexture = tex;
 		Player.me.transform.position = new Vector2(groundWidth / 2, groundHeight);
+		//thePad.transform.position = new Vector3(Player.me.transform.position.x, Player.me.transform.position.y + 3, Player.me.transform.position.z);
+
 	}
 
 
@@ -260,7 +271,7 @@ public class GroundGenerator : MonoBehaviour {
 		for (int x = 0; x < groundWidth; x++) {
 			for (int y = 0; y < groundHeight; y++) {
 
-				if (Random.value < 0.01f && x >  5 && x < groundWidth - 5 && y > 5 && y < groundHeight - 5) {
+				if (Random.value < 0.001f && x >  5 && x < groundWidth - 5 && y < 50 && y < groundHeight - 5) {
 					Debug.Log("SHRINE SPAWN");
 					spawnShrine(x, y);
 
@@ -274,6 +285,7 @@ public class GroundGenerator : MonoBehaviour {
 	void spawnShrine(int a, int b) {
 
 		Debug.Log(a + " " + b);
+		Master.me.numShrines ++;
 		for (int x = 0; x < 5; x++) {
 			for (int y = 0; y < 5; y++) {
 

@@ -122,6 +122,7 @@ public class UpgradeUI : MonoBehaviour {
 
 			for(int i = 0; i < Player.me.inventory.Length - 1; i++) {
 				
+				Debug.Log(Master.me.getOreName(i));
 				float oreValue = Master.me.ores[i].value;
 				oreValue *= Player.me.inventory[i];
 				totalOreValue += oreValue;

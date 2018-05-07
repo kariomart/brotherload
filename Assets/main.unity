@@ -866,10 +866,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06025773aae394d8fba8cc0dd2e031f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  thePad: {fileID: 985877517}
   groundTile: {fileID: 1471146062373210, guid: d84dba73834e84143864d4928c18f886, type: 2}
   quad: {fileID: 861304394}
   groundWidth: 50
-  groundHeight: 50
+  groundHeight: 100
   mapStartY: 0
   clusterSize: 5
   frequency: 0.2
@@ -1389,7 +1390,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 985877517}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 44.8, y: 65.3, z: 0.08940604}
+  m_LocalPosition: {x: 40.58, y: 114, z: 0.08940604}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1166580100}
@@ -3103,6 +3104,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fa4daeec96e1486faa76ef53b43b5d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  numShrines: 0
+  idolsSent: 0
   fuelRate: 1
   orePackageValue: 0
   oreInSpace: 0
