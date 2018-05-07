@@ -396,7 +396,7 @@ MonoBehaviour:
   money: 1000
   inventory: 
   numInvOres: 0
-  inventorySize: 10
+  inventorySize: 30
   fueltankSize: 2000
   fuelIdleRate: 1
   fuelMovingRate: 3
@@ -4585,7 +4585,7 @@ MonoBehaviour:
   maxDistance: 250
   numShrines: 0
   idolsSent: 0
-  fuelRate: 1
+  fuelRate: 0.25
   orePackageValue: 0
   oreInSpace: 0
   packageTimer: 0

@@ -146,15 +146,15 @@ public class Master : MonoBehaviour {
 
 	void addHulls() {
 
-		hulls.Add(new Hull("Tipper", new int[] {0, 8, 8, 0, 0, 0, 0, 0}, 20));
-		hulls.Add(new Hull("Brass Box", new int[] {0, 0, 3, 5, 8, 5, 0, 0}, 50));
+		hulls.Add(new Hull("Tipper", new int[] {0, 8, 8, 0, 0, 0, 0, 0}, 50));
+		hulls.Add(new Hull("Brass Box", new int[] {0, 0, 3, 5, 8, 5, 0, 0}, 65));
 		hulls.Add(new Hull("The Vault", new int[] {0, 0, 0, 0, 10, 10, 10, 0}, 100));
 
 	}
 
 	void addDrills() {
 
-		drills.Add(new Drill("Copper Drill", new int[] {0, 10, 0, 0, 0, 0, 0, 0}, 25, 3));
+		drills.Add(new Drill("Copper Drill", new int[] {0, 6, 0, 0, 0, 0, 0, 0}, 25, 3));
 		drills.Add(new Drill("Tiron Drill", new int[] {0, 0, 8, 8, 0, 0, 0, 0}, 22, 5));
 		drills.Add(new Drill("Silver Drill", new int[] {0, 0, 0, 0, 10, 0, 0, 0}, 20, 5));
 		drills.Add(new Drill("Gold Drill", new int[] {0, 0, 0, 0, 0, 10, 0, 0}, 15, 6));
